@@ -121,21 +121,19 @@ class AlertsController extends SugarController
         $this->view = 'json';
     }
 
-    public function action_redirect()
-    {
+   public function action_redirect()
+{
         $bean = BeanFactory::getBean('Alerts', $_GET['record']);
+        //bug #4160 $bean->save(); adds &amp; to the URL
+        $url = $bean->url_redirect;
         $bean->is_read = 1;
         $bean->save();
-
         if(empty($bean->url_redirect)) {
             if (!empty($_SERVER['HTTP_REFERER'])){
                 SugarApplication::redirect($_SERVER['HTTP_REFERER']);
             }
             SugarApplication::redirect('index.php');
         }
-
-
-        SugarApplication::redirect($bean->url_redirect);
-
+        SugarApplication::redirect($url);
     }
 }
